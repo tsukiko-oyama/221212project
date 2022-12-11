@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="css/sample.css">
+<link rel="stylesheet" href="css/reset.css">
+<title>Chatterbox</title>
+</head>
+<body>
+
+<!-- コンテンツ表示画面 -->
+<header class="header">CHATTERBOX</header>
+<div class="chat-box">
+    <div class="box" id="output"></div>
+    <div class="send-box">
+        <div class="text-box">
+        <div>
+            Name: <input type="text" id="uname">
+            <textarea name="" id="text"  placeholder="type message..."></textarea>
+            <button id="send">SEND</button>
+        </div>
+    </div>
+</div>
+
+<!--/ コンテンツ表示画面 -->
+
+
+
+<!-- JQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<!-- JQuery -->
+
+
+<!--** 以下Firebase **-->
+<!-- script tagを使用 -->
+<script type="module">　
+// moduleないとimportはうごかない
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    import { getDatabase, ref, push, set, onChildAdded, remove, onChildRemoved }
+            from "https://cdnjs.cloudflare.com/ajax/libs/firebase/9.14.0/firebase-database.js";
+    
+    // https://firebase.google.com/docs/web/setup#available-libraries
+  
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyBq0XNFATagghcYontJ0LTqpfbbusn2nj0",
+      authDomain: "fir-demo-e79e9.firebaseapp.com",
+      projectId: "fir-demo-e79e9",
+      storageBucket: "fir-demo-e79e9.appspot.com",
+      messagingSenderId: "472185927741",
+      appId: "1:472185927741:web:d8e628d7d39d9530ced254"
+    };
+  
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);//Realtime DBに接続
+    const dbRef=ref(db,"chat");
+
+//保存 
+$("#send").on("click",function(){
+    const msg={
+        uname: $("#uname").val(),
+        text: $("#text").val()
+    }
+    const newPostRef=push(dbRef)
+    set(newPostRef,msg)
+});
+
+//ページ読み込み時にデータ取りにいく／その都度データとりにいく
+
+onChildAdded(dbRef, function(data){
+    const key = data.key;
+    const msg = data.val();
+    console.log(msg);
+    const h = `<p>NAME:${msg.uname} <br> MESSAGE: ${msg.text}</p>`;
+    $("#output").append(h);
+})
+
+// 最下部表示
+// addEventlisterとonclickの違い
+const send = document.getElementById("send");
+send.addEventListener('click', ()=>{
+    //リストを取得
+    const box = document.getElementById('box');
+    //リストアイテムを挿入
+    box.insertAdjacentHTML('beforeend', '<li>ADD ITEM</li>');
+    //スクロールバーの位置をリストの最下部に設定
+    box.scrollTo(0, box.scrollHeight);
+}, false);
+
+$("#text").on("keydown",function(e){
+    console.log(e.keyCode);
+    if(e.keyCode===13){
+        const msg={
+        uname: $("#uname").val(),
+        text: $("#text").val()
+    }
+    const newPostRef=push(dbRef)
+    set(newPostRef,msg)
+
+    }
+})
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
