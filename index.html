@@ -4,27 +4,101 @@
 <meta charset="utf-8">
 <link rel="stylesheet" href="css/sample.css">
 <link rel="stylesheet" href="css/reset.css">
-<title>Chatterbox</title>
+<title>Scrapbook</title>
 </head>
 <body>
 
 <!-- コンテンツ表示画面 -->
-<header class="header">CHATTERBOX</header>
+<header class="header">Scrapbook</header>
+
+<div class="send-box">
+    <div class="concept">
+    ◆CONCEPT◆<br>
+    あったらいいなの投稿に特化したSNS<br>
+    ≪実装できている機能≫<br>
+    ・投稿・読み込み機能<br>
+    ≪実装したい機能≫ <br>
+    １．基本機能<br>
+    ・投稿日時の表示<br>
+    ・キーワード・カテゴリ・投稿者属性別検索<br>
+    ・「ほしい」クリックのカウント機能<br>
+    ・「ほしい」数順並び替え<br>
+    ２．発展的機能<br>
+    ・ログイン機能・自身の投稿履歴の閲覧<br>
+    ・表に投稿されない個人情報の入力画面<br>
+    ・事業開発をした企業用裏画面<br>
+    </div>
+    <div class="text-box">
+            ユーザー名: <input type="text" id="uname">
+            性別：<select name="gender" id="gender">
+                <option value="男性">男性</option>
+                <option value="女性">女性</option>
+                <option value="未回答">未回答</option>
+            </select>
+            年齢：<select name="age" id="age">
+                <option value="10代">10代</option>
+                <option value="20代">20代</option>
+                <option value="30代">30代</option>
+                <option value="40代">40代</option>
+                <option value="50代">50代</option>
+                <option value="60代">60代</option>
+                <option value="70代">70代</option>
+                <option value="80代">80代</option>
+                <option value="90代">90代~</option>
+                <option value="未回答">未回答</option>
+            </select>
+            <br>
+            カテゴリー：<select name="category" id="category">
+                <option value="エンタメ">エンタメ</option>
+                <option value="家電">家電</option>
+                <option value="ホーム・キッチン・日用雑貨">ホーム・キッチン・日用雑貨</option>
+                <option value="食品・飲料・お酒">食品・飲料・お酒</option>
+                <option value="ビューティー">ビューティー</option>
+                <option value="ベビー・玩具">ベビー・玩具</option>
+                <option value="ホビー">ホビー</option>
+                <option value="服・シューズ・バッグ">服・シューズ・バッグ</option>
+                <option value="スポーツ・アウトドア">スポーツ・アウトドア</option>
+                <option value="ウェルネス">ウェルネス</option>
+            </select>
+            欲しい： <select name="thingService" id="thingService">
+            <option value="モノ">モノ</option>
+            <option value="サービス">サービス</option>
+            </select>
+            <br>
+            <div class="textbuttonwrapper">
+                <textarea name="detail" id="detail"  placeholder="あなたがほしいものは？"></textarea>
+                <button id="send">投稿</button>
+            </div>
+            
+        </div>
+
+    <div class="searchBox">
+    <!-- カテゴリー：<select name="category" id="searchCategory">
+        <option value="すべて">すべて</option>
+        <option value="エンタメ">エンタメ</option>
+        <option value="家電">家電</option>
+        <option value="ホーム・キッチン・日用雑貨">ホーム・キッチン・日用雑貨</option>
+        <option value="食品・飲料・お酒">食品・飲料・お酒</option>
+        <option value="ビューティー">ビューティー</option>
+        <option value="ベビー・玩具">ベビー・玩具</option>
+        <option value="ホビー">ホビー</option>
+        <option value="服・シューズ・バッグ">服・シューズ・バッグ</option>
+        <option value="スポーツ・アウトドア">スポーツ・アウトドア</option>
+        <option value="ウェルネス">ウェルネス</option>
+        </select>
+        <button id="search">検索</button>
+    </div> -->
 <div class="chat-box">
     <div class="box" id="output"></div>
-    <div class="send-box">
-        <div class="text-box">
-        <div>
-            Name: <input type="text" id="uname">
-            <textarea name="" id="text"  placeholder="type message..."></textarea>
-            <button id="send">SEND</button>
-        </div>
+    
     </div>
 </div>
 
 <!--/ コンテンツ表示画面 -->
 
-
+<!-- JQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<!-- JQuery -->
 
 <!-- JQuery -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -38,69 +112,62 @@
     // Import the functions you need from the SDKs you need
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
     // TODO: Add SDKs for Firebase products that you want to use
-    import { getDatabase, ref, push, set, onChildAdded, remove, onChildRemoved }
+    import { getDatabase, ref, push, set, onChildAdded, remove, onChildRemoved, query}
             from "https://cdnjs.cloudflare.com/ajax/libs/firebase/9.14.0/firebase-database.js";
     
     // https://firebase.google.com/docs/web/setup#available-libraries
   
     // Your web app's Firebase configuration
+    // Your web app's Firebase configuration
     const firebaseConfig = {
-      apiKey: "",
-      authDomain: "fir-demo-e79e9.firebaseapp.com",
-      projectId: "fir-demo-e79e9",
-      storageBucket: "fir-demo-e79e9.appspot.com",
-      messagingSenderId: "472185927741",
-      appId: "1:472185927741:web:d8e628d7d39d9530ced254"
+        apiKey: "AIzaSyDO9mCVUmhNVx7lzzQrS5Y1-stkiiMEtIk",
+        authDomain: "scrapbook-a4a83.firebaseapp.com",
+        projectId: "scrapbook-a4a83",
+        storageBucket: "scrapbook-a4a83.appspot.com",
+        messagingSenderId: "100009365373",
+        appId:
     };
+
   
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);//Realtime DBに接続
-    const dbRef=ref(db,"chat");
+    const dbRef=ref(db,"scrapbook");
+    
 
 //保存 
 $("#send").on("click",function(){
-    const msg={
+    const post={
         uname: $("#uname").val(),
-        text: $("#text").val()
+        gender: $("#gender").val(),
+        age: $("#age").val(),
+        category: $("#category").val(),
+        thingService: $("#thingService").val(),
+        detail: $("#detail").val()
     }
-    const newPostRef=push(dbRef)
-    set(newPostRef,msg)
+    const newPostRef=push(dbRef) //ユニークキーの生成
+    set(newPostRef,post)
 });
 
 //ページ読み込み時にデータ取りにいく／その都度データとりにいく
-
 onChildAdded(dbRef, function(data){
     const key = data.key;
-    const msg = data.val();
-    console.log(msg);
-    const h = `<p>NAME:${msg.uname} <br> MESSAGE: ${msg.text}</p>`;
-    $("#output").append(h);
+    const post = data.val();
+    const p = 
+        `<div class="posteditem">ユーザー名：${post.uname} <br> 
+        ${post.age} ${post.gender} <br> 
+        <div class="h2">カテゴリー：${post.category}<br>
+        欲しい：${post.thingService}<br></div>
+        <div class="h3">${post.detail}</div>
+        <button id="yesbtn">ほしい♥</button><button id="yesbtn">返信</button></div>`;
+        // console.log(post);
+        $("#output").append(p);
 })
 
-// 最下部表示
-// addEventlisterとonclickの違い
-const send = document.getElementById("send");
-send.addEventListener('click', ()=>{
-    //リストを取得
-    const box = document.getElementById('box');
-    //リストアイテムを挿入
-    box.insertAdjacentHTML('beforeend', '<li>ADD ITEM</li>');
-    //スクロールバーの位置をリストの最下部に設定
-    box.scrollTo(0, box.scrollHeight);
-}, false);
-
-$("#text").on("keydown",function(e){
-    console.log(e.keyCode);
-    if(e.keyCode===13){
-        const msg={
-        uname: $("#uname").val(),
-        text: $("#text").val()
-    }
-    const newPostRef=push(dbRef)
-    set(newPostRef,msg)
-
-    }
+// 検索機能
+$("#search").on("click",function(){
+    $("#output").empty();
+            
 })
 
 </script>
@@ -118,29 +185,6 @@ $("#text").on("keydown",function(e){
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
